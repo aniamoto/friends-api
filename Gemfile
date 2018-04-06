@@ -25,8 +25,9 @@ gem 'neo4j', '~> 9.2.0'
 # gem 'rack-cors'
 
 group :development, :test do
-  gem 'pry-rails'
   gem 'neo4j-rake_tasks'
+  gem 'pry-rails'
+  gem 'rspec-rails', '~> 3.5'
 end
 
 group :development do
