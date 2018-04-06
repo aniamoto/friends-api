@@ -13,4 +13,6 @@
 !/log/.keep
 !/tmp/.keep
 
+/db/neo4j/development/*
+
 .byebug_history
