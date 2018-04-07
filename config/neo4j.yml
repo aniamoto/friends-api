@@ -3,4 +3,4 @@ development:
   url: http://localhost:7474
 test:
   type: http
-  url: http://localhost:7575
+  url: http://localhost:7475

@@ -14,5 +14,6 @@
 !/tmp/.keep
 
 /db/neo4j/development/*
+/db/neo4j/test/*
 
 .byebug_history
