@@ -1,29 +1,41 @@
 module Api::V1
   class FriendshipsController < ApplicationController
-    before_action :validate_friendship, only: :create
+    before_action :validate_emails, only: [:create, :show_common]
+    before_action :set_user, only: [:create, :show, :show_common]
 
     # POST /api/v1/friends
     def create
-      User.find_by!(email: @email1).friends << User.find_by!(email: @email2)
+      @user.friends << User.find_by!(email: @email2)
       render_success
+    end
+
+    # GET /api/v1/friends
+    def show
+      friends = @user.friends.pluck(:email)
+      render_list_with_count('friends', friends)
+    end
+
+    # GET /api/v1/mutual_friends
+    def show_common
+      friends = User.find_by!(email: @email2).friends.
+        where(email: @user.friends.pluck(:email)).pluck(:email)
+
+      render_list_with_count('friends', friends)
     end
 
     private
 
-      def validate_friendship
-        # I18n, hardcoded text is bad
-        if friend_params[:friends].size < 2
-          return json_response({ message: 'Friendship creation requires two emails' }, :unprocessable_entity)
-        end
-
-        @email1, @email2 = friend_params[:friends]
-        if @email1.casecmp(@email2).zero?
-          json_response({ message: 'User cannot friend themselves!' }, :unprocessable_entity)
-        end
+      def set_user
+        email = params[:email] || params[:friends]&.first
+        @user = User.find_by!(email: email)
       end
 
-      def friend_params
-        params.permit(friends: [])
+      def validate_emails
+        @email1, @email2 = params[:friends]
+        # I18n, hardcoded text is bad
+        if @email1.nil? || @email2.nil? || @email1.casecmp(@email2).zero?
+          json_response({ message: 'Two unique emails are required' }, :unprocessable_entity)
+        end
       end
   end
 end
