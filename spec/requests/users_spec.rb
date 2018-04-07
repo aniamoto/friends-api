@@ -42,7 +42,7 @@ RSpec.describe 'Users API', type: :request do
       end
 
       it 'returns a not found message' do
-        expect(response.body).to match(/Couldn't find User/)
+        expect(response.body).to match(/Object not found/)
       end
     end
   end
