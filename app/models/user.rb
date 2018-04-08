@@ -6,7 +6,7 @@ class User
   has_many :in, :subscribers, type: 'FOLLOWS', model_class: :User, unique: true
   has_many :out, :subscriptions, type: 'FOLLOWS', model_class: :User, unique: true
   has_many :in, :blocked_by, type: 'BLOCKED_BY', model_class: :User, unique: true
-  has_many :out, :blocked_users, type: 'BLOCKED_BY', model_class: :User, unique: true
+  has_many :out, :blocks_users, type: 'BLOCKED_BY', model_class: :User, unique: true
 
   validates :email, presence: true, uniqueness: true
 
@@ -19,6 +19,13 @@ class User
   end
 
   def recipients
-    [] # todo
+    query_as(:user).
+      match("(user)<-[r:FOLLOWS]-(subscribers:User)").
+      where_not(subscribers: { email: friend_list }).
+      where_not("(user)<-[:BLOCKED_BY]-(subscribers)").
+      with("user, collect(subscribers) as subscribers").
+      match("(user)-[r:FRIENDS_WITH]->(friends:User)").
+      where_not("(user)<-[:BLOCKED_BY]-(friends)").
+      pluck(:subscribers, :friends).flatten.pluck(:email)
   end
 end

@@ -1,7 +1,7 @@
 module Api::V1
   class FriendshipsController < ApplicationController
-    before_action :validate_emails, only: [:create, :show_common]
-    before_action :set_user, only: [:create, :show, :show_common]
+    before_action :validate_emails, only: [:create, :mutual_friends]
+    before_action :set_user, only: [:create, :user_friends, :mutual_friends]
 
     # POST /api/v1/friends
     def create
@@ -10,13 +10,13 @@ module Api::V1
     end
 
     # GET /api/v1/friends
-    def show
+    def user_friends
       friends = @user.friend_list
       render_list_with_count('friends', friends)
     end
 
     # GET /api/v1/mutual_friends
-    def show_common
+    def mutual_friends
       user2 = User.find_by!(email: @email2)
       friends = @user.mutual_friends(user2)
 

@@ -2,11 +2,11 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :users
-      get  'friends', to: 'friendships#show'
-      post 'friends', to: 'friendships#create'
-      get  'mutual_friends', to: 'friendships#show_common'
-      get  'recipients', to: 'subscriptions#recipients'
-      post 'subscriptions', to: 'subscriptions#create'
+      resources :friends, controller: 'friendships', only: :create
+      get 'friends', to: 'friendships#user_friends'
+      get 'mutual_friends', to: 'friendships#mutual_friends'
+      resources :subscriptions, only: :create
+      get 'recipients', to: 'subscriptions#recipients'
     end
   end
 end
