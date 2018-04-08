@@ -3,8 +3,8 @@ class User
   property :email, type: String, constraint: :unique
 
   has_many :both, :friends, type: 'FRIENDS_WITH', model_class: :User, unique: true
-  has_many :in, :subscribers, type: 'FOLLOWS', model_class: :User, unique: true
-  has_many :out, :subscriptions, type: 'FOLLOWS', model_class: :User, unique: true
+  has_many :in, :subscribers, type: 'FOLLOWED_BY', model_class: :User, unique: true
+  has_many :out, :subscriptions, type: 'FOLLOWED_BY', model_class: :User, unique: true
   has_many :in, :blocked_by, type: 'BLOCKED_BY', model_class: :User, unique: true
   has_many :out, :blocks_users, type: 'BLOCKED_BY', model_class: :User, unique: true
 
@@ -20,7 +20,7 @@ class User
 
   def recipients
     query_as(:user).
-      match("(user)<-[r:FOLLOWS]-(subscribers:User)").
+      match("(user)<-[r:FOLLOWED_BY]-(subscribers:User)").
       where_not(subscribers: { email: friend_list }).
       where_not("(user)<-[:BLOCKED_BY]-(subscribers)").
       with("user, collect(subscribers) as subscribers").
