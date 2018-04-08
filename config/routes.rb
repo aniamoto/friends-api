@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       get 'mutual_friends', to: 'friendships#mutual_friends'
       resources :subscriptions, only: :create
       get 'recipients', to: 'subscriptions#recipients'
+      post 'block_user', to: 'blocked_users#create'
     end
   end
 end

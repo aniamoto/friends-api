@@ -7,8 +7,13 @@ module Api::V1
 
     # POST /api/v1/friends
     def create
-      @user1.friends << @user2
-      render_success
+      if @user1.friendship_possible?(@user2)
+        @user1.friends << @user2
+        render_success
+      else
+        # I18n, hardcoded text is bad
+        json_response({ message: 'Cannot create friendship with blocked user' }, :error)
+      end
     end
 
     # GET /api/v1/friends

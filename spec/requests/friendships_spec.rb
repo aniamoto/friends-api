@@ -1,7 +1,12 @@
 RSpec.describe 'Friendships API', type: :request do
   let!(:user1) { User.create!(email: "#{rand(36**8).to_s(36)}@example.com") }
   let!(:user2) { User.create!(email: "#{rand(36**8).to_s(36)}@example.com") }
-  let!(:user3) { User.create!(email: "#{rand(36**8).to_s(36)}@example.com") }
+  let!(:user3) do
+    User.create!(
+      email: "#{rand(36**8).to_s(36)}@example.com",
+      blocks_users: [user2]
+    )
+  end
   let!(:user4) { User.create!(email: "#{rand(36**8).to_s(36)}@example.com") }
   let!(:user_with_friends) do
     User.create!(
@@ -11,6 +16,7 @@ RSpec.describe 'Friendships API', type: :request do
   end
   let(:user1_email) { user1.email }
   let(:user2_email) { user2.email }
+  let(:user3_email) { user3.email }
 
   after(:all) do
     User.destroy_all
@@ -79,17 +85,33 @@ RSpec.describe 'Friendships API', type: :request do
   describe 'POST /api/v1/friends' do
     let(:valid_params) { { friends: [user1_email, user2_email] } }
     let(:invalid_params) { { friends: [user1_email, user1_email] } }
+    let(:blocked_users) { { friends: [user2_email, user3_email] } }
 
     context 'when the request is valid' do
-      before { post '/api/v1/friends', params: valid_params }
+      context 'friendship is possible' do
+        before { post '/api/v1/friends', params: valid_params }
 
-      it 'creates a friendship between users' do
-        expect(user1.friends.to_a).to eq([user2])
-        expect(user2.friends.to_a).to eq([user1])
+        it 'creates a friendship between users' do
+          expect(user1.friends.to_a).to eq([user2])
+          expect(user2.friends.to_a).to eq([user1])
+        end
+
+        it 'returns status code 200' do
+          expect(response).to be_success
+        end
       end
 
-      it 'returns status code 200' do
-        expect(response).to be_success
+      context 'friendship is not possible' do
+        before { post '/api/v1/friends', params: blocked_users }
+
+        it 'does not create a friendship between users' do
+          expect(user2.friends.to_a).not_to include([user3])
+          expect(user3.friends.to_a).not_to include([user2])
+        end
+
+        it 'returns status code 400' do
+          expect(response).to be_error
+        end
       end
     end
 
