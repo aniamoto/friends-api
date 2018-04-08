@@ -24,20 +24,15 @@ class User
 
   def recipients
     query_as(:user).
-      optional_match("(user)<-[r:FOLLOWS]-(subscribers:User)").
-      where_not(subscribers: { email: friend_list }).
-      where_not("(user)<-[:BLOCKS]-(subscribers)").
-      with("user, collect(subscribers) as subscribers").
-      optional_match("(user)-[r:FRIENDS_WITH]->(friends:User)").
-      where_not("(user)<-[:BLOCKS]-(friends)").
-      with("subscribers, collect(friends) as friends").
-      pluck(:subscribers, :friends).flatten.pluck(:email)
+      match("(user)<-[r:FOLLOWS|FRIENDS_WITH]-(recipients:User)").
+      where_not("(user)<-[:BLOCKS]-(recipients)").
+      pluck(:recipients).pluck(:email)
   end
 
   def blocks_or_blocked_by
     query_as(:user).
       match("(user)<-[r:BLOCKS]->(users:User)").
-      with("user, collect(DISTINCT users) as users").
+      with("collect(DISTINCT users) as users").
       pluck(:users).flatten
   end
 end
