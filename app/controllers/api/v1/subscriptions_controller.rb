@@ -12,7 +12,7 @@ module Api::V1
 
     # GET /api/v1/recipients
     def recipients
-      mentions = params[:text].scan(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i).uniq
+      mentions = params[:text].scan(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i)
       recipients = @user.recipients | mentions
 
       render_list_with_count('recipients', recipients)
