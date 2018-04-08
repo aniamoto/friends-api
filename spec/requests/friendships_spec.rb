@@ -109,7 +109,7 @@ RSpec.describe 'Friendships API', type: :request do
           expect(user3.friends.to_a).not_to include([user2])
         end
 
-        it 'returns status code 400' do
+        it 'returns status code 500' do
           expect(response).to be_error
         end
       end
