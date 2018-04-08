@@ -28,7 +28,7 @@ class User
       where_not(subscribers: { email: friend_list }).
       where_not("(user)<-[:BLOCKS]-(subscribers)").
       with("user, collect(subscribers) as subscribers").
-      match("(user)-[r:FRIENDS_WITH]->(friends:User)").
+      match("(user)<-[r:FRIENDS_WITH]->(friends:User)").
       where_not("(user)<-[:BLOCKS]-(friends)").
       pluck(:subscribers, :friends).flatten.pluck(:email)
   end
