@@ -1,11 +1,13 @@
 module Api::V1
   class FriendshipsController < ApplicationController
-    before_action :validate_emails, only: [:create, :mutual_friends]
-    before_action :set_user, only: [:create, :user_friends, :mutual_friends]
+    include EmailValidationHelper
+    before_action :set_emails, only: [:create, :mutual_friends]
+    before_action :set_user, only: [:user_friends]
+    before_action :set_users, only: [:create, :mutual_friends]
 
     # POST /api/v1/friends
     def create
-      @user.friends << User.find_by!(email: @email2)
+      @user1.friends << @user2
       render_success
     end
 
@@ -17,25 +19,24 @@ module Api::V1
 
     # GET /api/v1/mutual_friends
     def mutual_friends
-      user2 = User.find_by!(email: @email2)
-      friends = @user.mutual_friends(user2)
-
+      friends = @user1.mutual_friends(@user2)
       render_list_with_count('friends', friends)
     end
 
     private
 
       def set_user
-        email = params[:email] || params[:friends]&.first
-        @user = User.find_by!(email: email)
+        @user = User.find_by!(email: params[:email])
       end
 
-      def validate_emails
-        @email1, @email2 = params[:friends]
-        # I18n, hardcoded text is bad
-        if @email1.nil? || @email2.nil? || @email1.casecmp(@email2).zero?
-          json_response({ message: 'Two unique emails are required' }, :unprocessable_entity)
-        end
+      def set_users
+        @user1 = User.find_by!(email: @email1)
+        @user2 = User.find_by!(email: @email2)
+      end
+
+      def set_emails
+        params[:friends] ||= []
+        @email1, @email2 = validate_emails(params[:friends])
       end
   end
 end

@@ -1,6 +1,7 @@
 module Api::V1
   class SubscriptionsController < ApplicationController
-    before_action :validate_emails, only: :create
+    include EmailValidationHelper
+    before_action :set_emails, only: :create
     before_action :set_user, only: :recipients
     before_action :set_users, only: :create
 
@@ -29,12 +30,9 @@ module Api::V1
         @target = User.find_by!(email: @email2)
       end
 
-      def validate_emails
-        @email1, @email2 = params[:requestor], params[:target]
-        # I18n, hardcoded text is bad
-        if @email1.nil? || @email2.nil? || @email1.casecmp(@email2).zero?
-          json_response({ message: 'Two unique emails are required' }, :unprocessable_entity)
-        end
+      def set_emails
+        emails = [params[:requestor], params[:target]]
+        @email1, @email2 = validate_emails(emails)
       end
   end
 end
