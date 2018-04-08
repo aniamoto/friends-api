@@ -1,6 +1,7 @@
 module Api::V1
   class SubscriptionsController < ApplicationController
     before_action :validate_emails, only: :create
+    before_action :set_user, only: :recipients
     before_action :set_users, only: :create
 
     # POST /api/v1/subscriptions
@@ -11,13 +12,17 @@ module Api::V1
 
     # GET /api/v1/recipients
     def recipients
-      @sender = User.find_by!(email: params[:sender])
-      recipients = @sender.recipients
+      mentions = params[:text].scan(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i).uniq
+      recipients = @user.recipients | mentions
 
       render_list_with_count('recipients', recipients)
     end
 
     private
+
+      def set_user
+        @user = User.find_by!(email: params[:sender])
+      end
 
       def set_users
         @requestor = User.find_by!(email: @email1)
