@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       get  'friends', to: 'friendships#show'
       post 'friends', to: 'friendships#create'
       get  'mutual_friends', to: 'friendships#show_common'
+      get  'recipients', to: 'subscriptions#recipients'
       post 'subscriptions', to: 'subscriptions#create'
     end
   end

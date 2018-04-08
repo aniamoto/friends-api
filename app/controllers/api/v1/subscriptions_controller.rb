@@ -9,8 +9,12 @@ module Api::V1
       render_success
     end
 
-    # GET /api/v1/subscribers
-    def subscribers
+    # GET /api/v1/recipients
+    def recipients
+      @sender = User.find_by!(email: params[:sender])
+      recipients = @sender.recipients
+
+      render_list_with_count('recipients', recipients)
     end
 
     private

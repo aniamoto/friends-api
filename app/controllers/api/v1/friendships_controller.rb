@@ -11,14 +11,14 @@ module Api::V1
 
     # GET /api/v1/friends
     def show
-      friends = @user.friends.pluck(:email)
+      friends = @user.friend_list
       render_list_with_count('friends', friends)
     end
 
     # GET /api/v1/mutual_friends
     def show_common
-      friends = User.find_by!(email: @email2).friends.
-        where(email: @user.friends.pluck(:email)).pluck(:email)
+      user2 = User.find_by!(email: @email2)
+      friends = @user.mutual_friends(user2)
 
       render_list_with_count('friends', friends)
     end
