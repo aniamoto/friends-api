@@ -1,5 +1,5 @@
 RSpec.describe 'Users API', type: :request do
-  let!(:user) { User.create!(email: "#{rand(36**8).to_s(36)}@example.com") }
+  let!(:user) { create(:user) }
   let(:user_id) { user.id }
 
   after(:all) do

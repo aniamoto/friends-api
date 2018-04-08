@@ -1,23 +1,13 @@
 RSpec.describe 'Friendships API', type: :request do
-  let!(:user1) { User.create!(email: "#{rand(36**8).to_s(36)}@example.com") }
-  let!(:user2) { User.create!(email: "#{rand(36**8).to_s(36)}@example.com") }
-  let!(:user3) { User.create!(email: "#{rand(36**8).to_s(36)}@example.com") }
-  let!(:user4) { User.create!(email: "#{rand(36**8).to_s(36)}@example.com") }
-  let!(:user_with_friends) do
-    User.create!(
-      email: "#{rand(36**8).to_s(36)}@example.com",
-      friends: [user3]
-    )
-  end
-  let!(:user_with_subscriptions) do
-    User.create!(
-      email: "#{rand(36**8).to_s(36)}@example.com",
-      subscriptions: [user4]
-    )
-  end
+  let!(:user1) { create(:user) }
+  let!(:user2) { create(:user) }
+  let!(:user3) { create(:user) }
+  let!(:user4) { create(:user) }
+  let!(:user_with_friends) { create(:user, friends: [user3]) }
+  let!(:user_with_subscriptions) {create(:user, subscriptions: [user4]) }
   let!(:user_with_subscribers) do
-    User.create!(
-      email: "#{rand(36**8).to_s(36)}@example.com",
+    create(
+      :user,
       subscribers: [user3, user4, user_with_friends],
       friends: [user_with_friends, user_with_subscriptions],
       blocked_by: [user_with_subscriptions]

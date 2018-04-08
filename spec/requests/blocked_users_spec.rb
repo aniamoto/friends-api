@@ -1,6 +1,6 @@
 RSpec.describe 'Friendships API', type: :request do
-  let!(:user1) { User.create!(email: "#{rand(36**8).to_s(36)}@example.com") }
-  let!(:user2) { User.create!(email: "#{rand(36**8).to_s(36)}@example.com") }
+  let(:user1) { create(:user) }
+  let(:user2) { create(:user) }
   let(:user1_email) { user1.email }
   let(:user2_email) { user2.email }
 

@@ -1,22 +1,13 @@
 RSpec.describe 'Friendships API', type: :request do
-  let!(:user1) { User.create!(email: "#{rand(36**8).to_s(36)}@example.com") }
-  let!(:user2) { User.create!(email: "#{rand(36**8).to_s(36)}@example.com") }
-  let!(:user3) do
-    User.create!(
-      email: "#{rand(36**8).to_s(36)}@example.com",
-      blocks_users: [user2]
-    )
-  end
-  let!(:user4) { User.create!(email: "#{rand(36**8).to_s(36)}@example.com") }
-  let!(:user_with_friends) do
-    User.create!(
-      email: "#{rand(36**8).to_s(36)}@example.com",
-      friends: [user3, user4]
-    )
-  end
+  let!(:user1) { create(:user) }
+  let!(:user2) { create(:user) }
+  let!(:user3) { create(:user, blocks_users: [user2]) }
+  let!(:user4) { create(:user) }
+  let!(:user_with_friends) { create(:user, friends: [user3, user4]) }
   let(:user1_email) { user1.email }
   let(:user2_email) { user2.email }
   let(:user3_email) { user3.email }
+  let(:user4_email) { user4.email }
 
   after(:all) do
     User.destroy_all
@@ -28,7 +19,7 @@ RSpec.describe 'Friendships API', type: :request do
 
       it 'returns friends of the user with count' do
         expect(json).not_to be_empty
-        expect(json['friends']).to match_array([user3.email, user4.email])
+        expect(json['friends']).to match_array([user3_email, user4_email])
         expect(json['count']).to eq(2)
       end
 
@@ -54,7 +45,7 @@ RSpec.describe 'Friendships API', type: :request do
   describe 'GET /api/v1/mutual_friends' do
     context 'when the users exist' do
       before do
-        get "/api/v1/mutual_friends?friends[]=#{user3.email}&friends[]=#{user4.email}"
+        get "/api/v1/mutual_friends?friends[]=#{user3_email}&friends[]=#{user4_email}"
       end
 
       it 'returns mutual friends with count' do
@@ -70,7 +61,7 @@ RSpec.describe 'Friendships API', type: :request do
 
     context 'when one or both of the users do not exist' do
       email = 'no_user'
-      before { get "/api/v1/mutual_friends?friends[]=#{user3.email}&friends[]=#{email}" }
+      before { get "/api/v1/mutual_friends?friends[]=#{user3_email}&friends[]=#{email}" }
 
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
