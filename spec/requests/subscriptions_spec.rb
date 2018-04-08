@@ -19,7 +19,8 @@ RSpec.describe 'Friendships API', type: :request do
     User.create!(
       email: "#{rand(36**8).to_s(36)}@example.com",
       subscribers: [user3, user4, user_with_friends],
-      friends: [user_with_friends]
+      friends: [user_with_friends, user_with_subscriptions],
+      blocked_by: [user_with_subscriptions]
     )
   end
   let(:user1_email) { user1.email }
