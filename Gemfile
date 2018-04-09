@@ -11,6 +11,7 @@ gem 'rails', '~> 5.1.6'
 # Use Puma as the app server
 gem 'puma', '~> 3.7'
 gem 'neo4j', '~> 9.2.0'
+gem 'neo4j-rake_tasks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
@@ -25,7 +26,6 @@ gem 'neo4j', '~> 9.2.0'
 # gem 'rack-cors'
 
 group :development, :test do
-  gem 'neo4j-rake_tasks'
   gem 'pry-rails'
   gem 'rspec-rails', '~> 3.5'
 end
