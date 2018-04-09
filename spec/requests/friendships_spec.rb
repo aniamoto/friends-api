@@ -73,14 +73,14 @@ RSpec.describe 'Friendships API', type: :request do
     end
   end
 
-  describe 'POST /api/v1/friends' do
+  describe 'POST /api/v1/friendships' do
     let(:valid_params) { { friends: [user1_email, user2_email] } }
     let(:invalid_params) { { friends: [user1_email, user1_email] } }
     let(:blocked_users) { { friends: [user2_email, user3_email] } }
 
     context 'when the request is valid' do
       context 'friendship is possible' do
-        before { post '/api/v1/friends', params: valid_params }
+        before { post '/api/v1/friendships', params: valid_params }
 
         it 'creates a friendship between users' do
           expect(user1.friends.to_a).to eq([user2])
@@ -93,7 +93,7 @@ RSpec.describe 'Friendships API', type: :request do
       end
 
       context 'friendship is not possible' do
-        before { post '/api/v1/friends', params: blocked_users }
+        before { post '/api/v1/friendships', params: blocked_users }
 
         it 'does not create a friendship between users' do
           expect(user2.friends.to_a).not_to include([user3])
@@ -111,7 +111,7 @@ RSpec.describe 'Friendships API', type: :request do
     end
 
     context 'when the request has missing params' do
-      before { post '/api/v1/friends', params: {} }
+      before { post '/api/v1/friendships', params: {} }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -123,7 +123,7 @@ RSpec.describe 'Friendships API', type: :request do
     end
 
     context 'when the request params are the same email' do
-      before { post '/api/v1/friends', params: invalid_params }
+      before { post '/api/v1/friendships', params: invalid_params }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
