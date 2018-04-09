@@ -11,9 +11,8 @@ module Api::V1
         @user1.friends << @user2
         render_success
       else
-        # I18n, hardcoded text is bad
         json_response(
-          { message: 'Cannot create friendship with blocked user' },
+          { message: I18n.t('errors.friendships.blocked_user') },
           :unprocessable_entity
         )
       end
