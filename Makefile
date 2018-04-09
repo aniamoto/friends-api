@@ -7,6 +7,7 @@ install:
 
 start:
 	rake neo4j:start
+	rails s
 
 stop:
 	rake neo4j:stop
