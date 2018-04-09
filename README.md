@@ -13,7 +13,7 @@ While for small applications it might be sufficient to use Grape or Sinatra, Rai
 https://documenter.getpostman.com/view/4100407/friends-api/RVu5iTsE
 
 ## Install and start
-* Run `make install start`.
+* Run `make install migrate seed start`.
 * Installation of [Java SE Development Kit 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) might be required. [Java SE 8 Docs](https://docs.oracle.com/javase/8/docs/technotes/guides/install/mac_jdk.html#A1096855).
 
 ## Stop the app
