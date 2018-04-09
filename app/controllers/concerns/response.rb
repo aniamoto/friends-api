@@ -7,11 +7,10 @@ module Response
    render json: { success: true }
   end
 
-  def render_list_with_count(key, list)
-   render json: {
-     success: true,
-     key.to_sym => list,
-     count: list.length
-   }
+  def render_list(key, list, count = false)
+   response = { success: true, key.to_sym => list }
+   response.merge!(count: list.length) if count
+
+   render json: response
   end
 end

@@ -19,16 +19,20 @@ module Api::V1
     # GET /api/v1/friends
     def user_friends
       friends = @user.friend_list
-      render_list_with_count('friends', friends)
+      render_friend_list_with_count(friends)
     end
 
     # GET /api/v1/mutual_friends
     def mutual_friends
       friends = @user1.mutual_friends(@user2)
-      render_list_with_count('friends', friends)
+      render_friend_list_with_count(friends)
     end
 
     private
+
+      def render_friend_list_with_count(friends)
+        render_list('friends', friends, count = true)
+      end
 
       def set_user
         @user = User.find_by!(email: params[:email])

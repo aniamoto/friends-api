@@ -16,7 +16,7 @@ module Api::V1
       mentions = params[:text].scan(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i)
       recipients = @user.recipients | mentions
 
-      render_list_with_count('recipients', recipients)
+      render_list('recipients', recipients)
     end
 
     private
