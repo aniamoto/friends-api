@@ -4,10 +4,7 @@ query_string = <<query
   (_11:User  { uuid: 'user-02-john', email: 'john@example.com' }),
   (_12:User  { uuid: 'user-03-common', email: 'common@example.com' }),
   (_13:User  { uuid: 'user-04-lisa', email: 'lisa@example.com' }),
-  (_14:User  { uuid: 'user-05-kate', email: 'kate@example.com' }),
-  (_10)-[:FRIENDS_WITH]->(_12),
-  (_11)-[:FRIENDS_WITH]->(_12),
-  (_12)-[:BLOCKS]->(_11)
+  (_14:User  { uuid: 'user-05-kate', email: 'kate@example.com' })
 query
 
 Neo4j::Session.open(:server_db)
