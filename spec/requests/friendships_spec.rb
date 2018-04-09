@@ -100,8 +100,12 @@ RSpec.describe 'Friendships API', type: :request do
           expect(user3.friends.to_a).not_to include([user2])
         end
 
-        it 'returns status code 500' do
-          expect(response).to be_error
+        it 'returns status code 422' do
+          expect(response).to have_http_status(422)
+        end
+
+        it 'returns a validation failure message' do
+          expect(response.body).to match(/Cannot create friendship with blocked user/)
         end
       end
     end

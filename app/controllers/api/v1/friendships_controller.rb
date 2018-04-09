@@ -12,7 +12,10 @@ module Api::V1
         render_success
       else
         # I18n, hardcoded text is bad
-        json_response({ message: 'Cannot create friendship with blocked user' }, :error)
+        json_response(
+          { message: 'Cannot create friendship with blocked user' },
+          :unprocessable_entity
+        )
       end
     end
 
