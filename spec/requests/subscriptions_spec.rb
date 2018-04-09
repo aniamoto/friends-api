@@ -34,7 +34,6 @@ RSpec.describe 'Friendships API', type: :request do
         expect(json['recipients']).to match_array(
           [user1_email, user3.email, user4.email, user_with_friends.email]
         )
-        expect(json['count']).to eq(4)
       end
 
       it 'returns status code 200' do
